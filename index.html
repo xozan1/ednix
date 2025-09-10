@@ -40,6 +40,10 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+        /* Gizli dosya seçici butonu için stil */
+        #bg-file-input {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-gray-800 text-white flex flex-col items-center justify-center min-h-screen p-4">
@@ -70,13 +74,13 @@
         </div>
     </div>
     
-    <!-- Arka plan URL'sini girmek için kontroller -->
+    <!-- Arka plan dosyası yüklemek için kontroller -->
     <div class="mt-8 flex flex-col items-center p-4 bg-gray-900 rounded-xl shadow-lg z-10 w-full max-w-2xl">
-        <label for="bg-url-input" class="mb-2 text-lg font-semibold">Arka Plan URL'sini Girin (Görsel veya Video):</label>
-        <div class="w-full flex">
-            <input type="text" id="bg-url-input" placeholder="http://örnek.com/görsel.jpg" class="flex-grow p-2 rounded-l-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button id="set-bg-btn" class="bg-blue-500 text-white px-4 rounded-r-md hover:bg-blue-600 transition-colors">Uygula</button>
-        </div>
+        <label for="bg-file-input" class="mb-2 text-lg font-semibold">Arka Plan Dosyası Yükleyin:</label>
+        <label for="bg-file-input" class="cursor-pointer bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">
+            Dosya Seç
+        </label>
+        <input type="file" id="bg-file-input" accept="image/*,video/*">
     </div>
 
     <script>
@@ -87,8 +91,7 @@
         const scoreTextEl = document.getElementById('score-text');
         const resetBtn = document.getElementById('reset-btn');
         const buttons = document.querySelectorAll('.game-button');
-        const bgUrlInput = document.getElementById('bg-url-input');
-        const setBgBtn = document.getElementById('set-bg-btn');
+        const bgFileInput = document.getElementById('bg-file-input');
         const body = document.body;
         
         let playerScore = 0;
@@ -98,7 +101,6 @@
         const savedUrl = localStorage.getItem('backgroundUrl');
         if (savedUrl) {
             applyBackground(savedUrl);
-            bgUrlInput.value = savedUrl;
         }
 
         // URL'ye göre arka planı ayarlayan ana fonksiyon
@@ -107,10 +109,13 @@
             bgMediaContainer.innerHTML = '';
             body.style.backgroundImage = 'none'; // Önceki resim arka planını temizle
 
-            if (url.match(/\.(jpeg|jpg|gif|png)$/)) {
+            // Veri URL'sinden dosya türünü belirleme
+            const mimeType = url.split(':')[1].split(';')[0];
+
+            if (mimeType.startsWith('image')) {
                 // Görsel için
                 body.style.backgroundImage = `url('${url}')`;
-            } else if (url.match(/\.(mp4|webm|mov)$/)) {
+            } else if (mimeType.startsWith('video')) {
                 // Video için
                 const videoElement = document.createElement('video');
                 videoElement.src = url;
@@ -123,19 +128,18 @@
             }
         }
         
-        // Butona tıklandığında veya enter tuşuna basıldığında arka planı ayarla
-        setBgBtn.addEventListener('click', () => {
-            const url = bgUrlInput.value;
-            applyBackground(url);
-            localStorage.setItem('backgroundUrl', url);
-        });
+        // Dosya seçildiğinde arka planı ayarla
+        bgFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-        bgUrlInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const url = bgUrlInput.value;
-                applyBackground(url);
-                localStorage.setItem('backgroundUrl', url);
-            }
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const dataUrl = event.target.result;
+                applyBackground(dataUrl);
+                localStorage.setItem('backgroundUrl', dataUrl);
+            };
+            reader.readAsDataURL(file);
         });
 
         function getComputerChoice() {
