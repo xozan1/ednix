@@ -2,10 +2,50 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Test Sayfası</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benim Etkileşimli Sitem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
-<body>
-    <h1>Merhaba!</h1>
-    <p>Bu sayfa çalışıyor mu testi.</p>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-lg w-full text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Hoş Geldiniz!</h1>
+        <p class="text-gray-600 mb-6" id="welcome-message">
+            Bu site, bir butona tıklamanızla değişecek.
+        </p>
+        
+        <!-- Etkileşimli buton -->
+        <button id="change-text-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
+            Yazıyı Değiştir
+        </button>
+
+        <div class="mt-6 space-x-4">
+            <a href="https://github.com" target="_blank" class="text-blue-500 hover:underline">
+                GitHub'a Git
+            </a>
+            <a href="https://vercel.com" target="_blank" class="text-black hover:underline">
+                Vercel'e Git
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('change-text-btn').addEventListener('click', function() {
+            // Butona tıklandığında çalışacak JavaScript fonksiyonu
+            const messageElement = document.getElementById('welcome-message');
+            messageElement.textContent = "Butona tıkladığınız için teşekkürler! Siteniz artık etkileşimli.";
+            
+            // Butonun kendisini devre dışı bırakma
+            this.disabled = true;
+            this.textContent = "Değişti!";
+            this.classList.add('bg-gray-400');
+            this.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+        });
+    </script>
 </body>
 </html>
