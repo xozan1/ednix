@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taş-Kağıt-Makas Oyunu</title>
+    <title>Sade Web Sitesi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
@@ -13,13 +13,6 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-        }
-        .game-button {
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .game-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         .bg-video-container {
             position: fixed;
@@ -43,81 +36,11 @@
         #bg-file-input {
             display: none;
         }
-        #game-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            transform: scale(0);
-            transform-origin: bottom right;
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            z-index: 20;
-        }
-        #game-container.active {
-            transform: scale(1);
-        }
-        #open-game-btn, #close-game-btn {
-            position: fixed;
-            z-index: 30;
-            transition: transform 0.3s ease-in-out;
-        }
-        #open-game-btn {
-            bottom: 24px;
-            right: 24px;
-        }
-        #close-game-btn {
-            top: 8px;
-            right: 8px;
-            cursor: pointer;
-            font-size: 1.5rem;
-            line-height: 1;
-        }
-        #open-game-btn:hover {
-            transform: scale(1.1);
-        }
     </style>
 </head>
 <body class="bg-gray-800 text-white flex flex-col items-center justify-center min-h-screen p-4">
     <div id="bg-media-container" class="bg-media-container"></div>
-
-    <!-- Kişiselleştirilebilir yazı alanı -->
-    <div class="mt-8 flex flex-col items-center p-4 bg-gray-900 rounded-xl shadow-lg z-10 w-full max-w-2xl mb-4">
-        <label for="personal-text-input" class="mb-2 text-lg font-semibold">Kişisel Mesajınızı Yazın:</label>
-        <div class="w-full flex">
-            <input type="text" id="personal-text-input" placeholder="Örnek: Hoş geldiniz!" class="flex-grow p-2 rounded-l-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button id="set-personal-text-btn" class="bg-blue-500 text-white px-4 rounded-r-md hover:bg-blue-600 transition-colors">Uygula</button>
-        </div>
-    </div>
-    <div class="text-3xl font-bold mb-4" id="personal-text-display"></div>
-
-    <!-- Oyun içeriği -->
-    <div id="game-container" class="bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-2xl text-center">
-        <h1 class="text-3xl sm:text-4xl font-bold mb-6">Taş-Kağıt-Makas</h1>
-        <button id="close-game-btn" class="text-white">✕</button>
-        
-        <div class="mb-8">
-            <p id="result-text" class="text-xl sm:text-2xl font-semibold mb-4 text-green-400">Başlamak için bir seçenek seçin!</p>
-            <div class="text-center space-x-4 sm:space-x-8">
-                <span id="player-choice" class="text-6xl sm:text-8xl p-4 inline-block">❔</span>
-                <span class="text-4xl sm:text-6xl text-gray-400 font-extrabold px-2">vs</span>
-                <span id="computer-choice" class="text-6xl sm:text-8xl p-4 inline-block">❔</span>
-            </div>
-        </div>
-
-        <div class="flex justify-center space-x-4 mb-8">
-            <button id="rock-btn" class="game-button p-4 text-4xl bg-gray-700 rounded-full hover:bg-gray-600 transition-colors">✊</button>
-            <button id="paper-btn" class="game-button p-4 text-4xl bg-gray-700 rounded-full hover:bg-gray-600 transition-colors">✋</button>
-            <button id="scissors-btn" class="game-button p-4 text-4xl bg-gray-700 rounded-full hover:bg-gray-600 transition-colors">✌️</button>
-        </div>
-
-        <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8">
-            <p id="score-text" class="text-lg">Skor: Oyuncu 0 - Bilgisayar 0</p>
-            <button id="reset-btn" class="hidden bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-full transition-colors duration-300">
-                Yeniden Oyna
-            </button>
-        </div>
-    </div>
     
-    <!-- Arka plan dosyası yüklemek için kontroller -->
     <div class="mt-8 flex flex-col items-center p-4 bg-gray-900 rounded-xl shadow-lg z-10 w-full max-w-2xl">
         <label for="bg-file-input" class="mb-2 text-lg font-semibold">Arka Plan Dosyası Yükleyin:</label>
         <label for="bg-file-input" class="cursor-pointer bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">
@@ -126,56 +49,21 @@
         <input type="file" id="bg-file-input" accept="image/*,video/*">
     </div>
 
-    <!-- Oyunu açma butonu -->
-    <button id="open-game-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg">
-        Oyunu Oyna
-    </button>
-    
     <script>
-        const choices = ['✊', '✋', '✌️'];
-        const resultText = document.getElementById('result-text');
-        const playerChoiceEl = document.getElementById('player-choice');
-        const computerChoiceEl = document.getElementById('computer-choice');
-        const scoreTextEl = document.getElementById('score-text');
-        const resetBtn = document.getElementById('reset-btn');
-        const buttons = document.querySelectorAll('.game-button');
         const bgFileInput = document.getElementById('bg-file-input');
         const body = document.body;
-        const openGameBtn = document.getElementById('open-game-btn');
-        const closeGameBtn = document.getElementById('close-game-btn');
-        const gameContainer = document.getElementById('game-container');
-        const personalTextInput = document.getElementById('personal-text-input');
-        const setPersonalTextBtn = document.getElementById('set-personal-text-btn');
-        const personalTextDisplay = document.getElementById('personal-text-display');
-        
-        let playerScore = 0;
-        let computerScore = 0;
 
-        // Sayfa yüklendiğinde localStorage'dan kaydedilmiş verileri kontrol et
-        const savedUrl = localStorage.getItem('backgroundUrl');
-        const savedPersonalText = localStorage.getItem('personalText');
-
-        if (savedUrl) {
-            applyBackground(savedUrl);
-        }
-        if (savedPersonalText) {
-            personalTextDisplay.textContent = savedPersonalText;
-        }
-
-        // URL'ye göre arka planı ayarlayan ana fonksiyon
         function applyBackground(url) {
             const bgMediaContainer = document.getElementById('bg-media-container');
             bgMediaContainer.innerHTML = '';
-            body.style.backgroundImage = 'none'; // Önceki resim arka planını temizle
+            body.style.backgroundImage = 'none';
 
             const isImage = url.startsWith('data:image');
             const isVideo = url.startsWith('data:video');
 
             if (isImage) {
-                // Görsel için
                 body.style.backgroundImage = `url('${url}')`;
             } else if (isVideo) {
-                // Video için
                 const videoElement = document.createElement('video');
                 videoElement.src = url;
                 videoElement.classList.add('bg-video');
@@ -187,7 +75,6 @@
             }
         }
         
-        // Dosya seçildiğinde arka planı ayarla
         bgFileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -196,116 +83,9 @@
             reader.onload = (event) => {
                 const dataUrl = event.target.result;
                 applyBackground(dataUrl);
-                localStorage.setItem('backgroundUrl', dataUrl);
             };
             reader.readAsDataURL(file);
         });
-
-        // Oyun açma/kapama fonksiyonları
-        openGameBtn.addEventListener('click', () => {
-            gameContainer.classList.add('active');
-            openGameBtn.style.display = 'none';
-        });
-
-        closeGameBtn.addEventListener('click', () => {
-            gameContainer.classList.remove('active');
-            openGameBtn.style.display = 'block';
-        });
-
-        // Kişisel yazı fonksiyonları
-        setPersonalTextBtn.addEventListener('click', () => {
-            const text = personalTextInput.value;
-            personalTextDisplay.textContent = text;
-            localStorage.setItem('personalText', text);
-        });
-
-        personalTextInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const text = personalTextInput.value;
-                personalTextDisplay.textContent = text;
-                localStorage.setItem('personalText', text);
-            }
-        });
-
-        function getComputerChoice() {
-            const randomIndex = Math.floor(Math.random() * choices.length);
-            return choices[randomIndex];
-        }
-
-        function determineWinner(player, computer) {
-            if (player === computer) {
-                return 'draw';
-            } else if (
-                (player === '✊' && computer === '✌️') ||
-                (player === '✋' && computer === '✊') ||
-                (player === '✌️' && computer === '✋')
-            ) {
-                return 'player';
-            } else {
-                return 'computer';
-            }
-        }
-
-        function updateScore(winner) {
-            if (winner === 'player') {
-                playerScore++;
-                resultText.textContent = 'Kazandın!';
-                resultText.classList.remove('text-red-400', 'text-gray-400');
-                resultText.classList.add('text-green-400');
-            } else if (winner === 'computer') {
-                computerScore++;
-                resultText.textContent = 'Kaybettin!';
-                resultText.classList.remove('text-green-400', 'text-gray-400');
-                resultText.classList.add('text-red-400');
-            } else {
-                resultText.textContent = 'Berabere!';
-                resultText.classList.remove('text-green-400', 'text-red-400');
-                resultText.classList.add('text-gray-400');
-            }
-            scoreTextEl.textContent = `Skor: Oyuncu ${playerScore} - Bilgisayar ${computerScore}`;
-            
-            if (playerScore >= 5 || computerScore >= 5) {
-                endGame();
-            }
-        }
-        
-        function endGame() {
-            buttons.forEach(button => button.disabled = true);
-            if (playerScore > computerScore) {
-                resultText.textContent = 'Tebrikler, oyunu kazandın!';
-            } else {
-                resultText.textContent = 'Üzgünüm, oyunu kaybettin!';
-            }
-            resetBtn.classList.remove('hidden');
-        }
-
-        function resetGame() {
-            playerScore = 0;
-            computerScore = 0;
-            scoreTextEl.textContent = 'Skor: Oyuncu 0 - Bilgisayar 0';
-            resultText.textContent = 'Başlamak için bir seçenek seçin!';
-            resultText.classList.remove('text-red-400', 'text-green-400');
-            resultText.classList.add('text-gray-400');
-            playerChoiceEl.textContent = '❔';
-            computerChoiceEl.textContent = '❔';
-            buttons.forEach(button => button.disabled = false);
-            resetBtn.classList.add('hidden');
-        }
-
-        buttons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const playerSelection = e.target.textContent;
-                const computerSelection = getComputerChoice();
-                
-                playerChoiceEl.textContent = playerSelection;
-                computerChoiceEl.textContent = computerSelection;
-
-                const winner = determineWinner(playerSelection, computerSelection);
-                updateScore(winner);
-            });
-        });
-        
-        resetBtn.addEventListener('click', resetGame);
     </script>
 </body>
 </html>
