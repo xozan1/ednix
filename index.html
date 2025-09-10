@@ -55,12 +55,21 @@
         #game-container.active {
             transform: scale(1);
         }
-        #open-game-btn {
+        #open-game-btn, #close-game-btn {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
             z-index: 30;
             transition: transform 0.3s ease-in-out;
+        }
+        #open-game-btn {
+            bottom: 24px;
+            right: 24px;
+        }
+        #close-game-btn {
+            top: 8px;
+            right: 8px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            line-height: 1;
         }
         #open-game-btn:hover {
             transform: scale(1.1);
@@ -70,9 +79,20 @@
 <body class="bg-gray-800 text-white flex flex-col items-center justify-center min-h-screen p-4">
     <div id="bg-media-container" class="bg-media-container"></div>
 
+    <!-- Kişiselleştirilebilir yazı alanı -->
+    <div class="mt-8 flex flex-col items-center p-4 bg-gray-900 rounded-xl shadow-lg z-10 w-full max-w-2xl mb-4">
+        <label for="personal-text-input" class="mb-2 text-lg font-semibold">Kişisel Mesajınızı Yazın:</label>
+        <div class="w-full flex">
+            <input type="text" id="personal-text-input" placeholder="Örnek: Hoş geldiniz!" class="flex-grow p-2 rounded-l-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button id="set-personal-text-btn" class="bg-blue-500 text-white px-4 rounded-r-md hover:bg-blue-600 transition-colors">Uygula</button>
+        </div>
+    </div>
+    <div class="text-3xl font-bold mb-4" id="personal-text-display"></div>
+
     <!-- Oyun içeriği -->
     <div id="game-container" class="bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-2xl text-center">
         <h1 class="text-3xl sm:text-4xl font-bold mb-6">Taş-Kağıt-Makas</h1>
+        <button id="close-game-btn" class="text-white">✕</button>
         
         <div class="mb-8">
             <p id="result-text" class="text-xl sm:text-2xl font-semibold mb-4 text-green-400">Başlamak için bir seçenek seçin!</p>
@@ -122,15 +142,24 @@
         const bgFileInput = document.getElementById('bg-file-input');
         const body = document.body;
         const openGameBtn = document.getElementById('open-game-btn');
+        const closeGameBtn = document.getElementById('close-game-btn');
         const gameContainer = document.getElementById('game-container');
+        const personalTextInput = document.getElementById('personal-text-input');
+        const setPersonalTextBtn = document.getElementById('set-personal-text-btn');
+        const personalTextDisplay = document.getElementById('personal-text-display');
         
         let playerScore = 0;
         let computerScore = 0;
 
-        // Sayfa yüklendiğinde localStorage'dan kaydedilmiş URL'yi kontrol et
+        // Sayfa yüklendiğinde localStorage'dan kaydedilmiş verileri kontrol et
         const savedUrl = localStorage.getItem('backgroundUrl');
+        const savedPersonalText = localStorage.getItem('personalText');
+
         if (savedUrl) {
             applyBackground(savedUrl);
+        }
+        if (savedPersonalText) {
+            personalTextDisplay.textContent = savedPersonalText;
         }
 
         // URL'ye göre arka planı ayarlayan ana fonksiyon
@@ -139,13 +168,13 @@
             bgMediaContainer.innerHTML = '';
             body.style.backgroundImage = 'none'; // Önceki resim arka planını temizle
 
-            // Veri URL'sinden dosya türünü belirleme
-            const mimeType = url.split(':')[1].split(';')[0];
+            const isImage = url.startsWith('data:image');
+            const isVideo = url.startsWith('data:video');
 
-            if (mimeType.startsWith('image')) {
+            if (isImage) {
                 // Görsel için
                 body.style.backgroundImage = `url('${url}')`;
-            } else if (mimeType.startsWith('video')) {
+            } else if (isVideo) {
                 // Video için
                 const videoElement = document.createElement('video');
                 videoElement.src = url;
@@ -172,9 +201,30 @@
             reader.readAsDataURL(file);
         });
 
+        // Oyun açma/kapama fonksiyonları
         openGameBtn.addEventListener('click', () => {
             gameContainer.classList.add('active');
             openGameBtn.style.display = 'none';
+        });
+
+        closeGameBtn.addEventListener('click', () => {
+            gameContainer.classList.remove('active');
+            openGameBtn.style.display = 'block';
+        });
+
+        // Kişisel yazı fonksiyonları
+        setPersonalTextBtn.addEventListener('click', () => {
+            const text = personalTextInput.value;
+            personalTextDisplay.textContent = text;
+            localStorage.setItem('personalText', text);
+        });
+
+        personalTextInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const text = personalTextInput.value;
+                personalTextDisplay.textContent = text;
+                localStorage.setItem('personalText', text);
+            }
         });
 
         function getComputerChoice() {
