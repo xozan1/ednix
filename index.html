@@ -3,49 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benim Etkileşimli Sitem</title>
+    <title>Taş-Kağıt-Makas Oyunu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
+            transition: background-color 0.5s ease-in-out;
+        }
+        .game-button {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .game-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md max-w-lg w-full text-center">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">Hoş Geldiniz!</h1>
-        <p class="text-gray-600 mb-6" id="welcome-message">
-            Bu site, bir butona tıklamanızla değişecek.
-        </p>
+<body class="bg-gray-800 text-white flex items-center justify-center min-h-screen p-4">
+    <div class="bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-2xl text-center">
+        <h1 class="text-3xl sm:text-4xl font-bold mb-6">Taş-Kağıt-Makas</h1>
         
-        <!-- Etkileşimli buton -->
-        <button id="change-text-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
-            Yazıyı Değiştir
-        </button>
+        <div class="mb-8">
+            <p id="result-text" class="text-xl sm:text-2xl font-semibold mb-4 text-green-400">Başlamak için bir seçenek seçin!</p>
+            <div class="text-center space-x-4 sm:space-x-8">
+                <span id="player-choice" class="text-6xl sm:text-8xl p-4 inline-block">❔</span>
+                <span class="text-4xl sm:text-6xl text-gray-400 font-extrabold px-2">vs</span>
+                <span id="computer-choice" class="text-6xl sm:text-8xl p-4 inline-block">❔</span>
+            </div>
+        </div>
 
-        <div class="mt-6 space-x-4">
-            <a href="https://github.com" target="_blank" class="text-blue-500 hover:underline">
-                GitHub'a Git
-            </a>
-            <a href="https://vercel.com" target="_blank" class="text-black hover:underline">
-                Vercel'e Git
-            </a>
+        <div class="flex justify-center space-x-4 mb-8">
+            <button id="rock-btn" class="game-button p-4 text-4xl bg-gray-700 rounded-full hover:bg-gray-600 transition-colors">✊</button>
+            <button id="paper-btn" class="game-button p-4 text-4xl bg-gray-700 rounded-full hover:bg-gray-600 transition-colors">✋</button>
+            <button id="scissors-btn" class="game-button p-4 text-4xl bg-gray-700 rounded-full hover:bg-gray-600 transition-colors">✌️</button>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8">
+            <p id="score-text" class="text-lg">Skor: Oyuncu 0 - Bilgisayar 0</p>
+            <button id="reset-btn" class="hidden bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-full transition-colors duration-300">
+                Yeniden Oyna
+            </button>
         </div>
     </div>
 
     <script>
-        document.getElementById('change-text-btn').addEventListener('click', function() {
-            // Butona tıklandığında çalışacak JavaScript fonksiyonu
-            const messageElement = document.getElementById('welcome-message');
-            messageElement.textContent = "Butona tıkladığınız için teşekkürler! Siteniz artık etkileşimli.";
+        const choices = ['✊', '✋', '✌️'];
+        const resultText = document.getElementById('result-text');
+        const playerChoiceEl = document.getElementById('player-choice');
+        const computerChoiceEl = document.getElementById('computer-choice');
+        const scoreTextEl = document.getElementById('score-text');
+        const resetBtn = document.getElementById('reset-btn');
+
+        const buttons = document.querySelectorAll('.game-button');
+        
+        let playerScore = 0;
+        let computerScore = 0;
+
+        function getComputerChoice() {
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            return choices[randomIndex];
+        }
+
+        function determineWinner(player, computer) {
+            if (player === computer) {
+                return 'draw';
+            } else if (
+                (player === '✊' && computer === '✌️') ||
+                (player === '✋' && computer === '✊') ||
+                (player === '✌️' && computer === '✋')
+            ) {
+                return 'player';
+            } else {
+                return 'computer';
+            }
+        }
+
+        function updateScore(winner) {
+            if (winner === 'player') {
+                playerScore++;
+                resultText.textContent = 'Kazandın!';
+                resultText.classList.remove('text-red-400', 'text-gray-400');
+                resultText.classList.add('text-green-400');
+            } else if (winner === 'computer') {
+                computerScore++;
+                resultText.textContent = 'Kaybettin!';
+                resultText.classList.remove('text-green-400', 'text-gray-400');
+                resultText.classList.add('text-red-400');
+            } else {
+                resultText.textContent = 'Berabere!';
+                resultText.classList.remove('text-green-400', 'text-red-400');
+                resultText.classList.add('text-gray-400');
+            }
+            scoreTextEl.textContent = `Skor: Oyuncu ${playerScore} - Bilgisayar ${computerScore}`;
             
-            // Butonun kendisini devre dışı bırakma
-            this.disabled = true;
-            this.textContent = "Değişti!";
-            this.classList.add('bg-gray-400');
-            this.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+            if (playerScore >= 5 || computerScore >= 5) {
+                endGame();
+            }
+        }
+        
+        function endGame() {
+            buttons.forEach(button => button.disabled = true);
+            if (playerScore > computerScore) {
+                resultText.textContent = 'Tebrikler, oyunu kazandın!';
+            } else {
+                resultText.textContent = 'Üzgünüm, oyunu kaybettin!';
+            }
+            resetBtn.classList.remove('hidden');
+        }
+
+        function resetGame() {
+            playerScore = 0;
+            computerScore = 0;
+            scoreTextEl.textContent = 'Skor: Oyuncu 0 - Bilgisayar 0';
+            resultText.textContent = 'Başlamak için bir seçenek seçin!';
+            resultText.classList.remove('text-red-400', 'text-green-400');
+            resultText.classList.add('text-gray-400');
+            playerChoiceEl.textContent = '❔';
+            computerChoiceEl.textContent = '❔';
+            buttons.forEach(button => button.disabled = false);
+            resetBtn.classList.add('hidden');
+        }
+
+        buttons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const playerSelection = e.target.textContent;
+                const computerSelection = getComputerChoice();
+                
+                playerChoiceEl.textContent = playerSelection;
+                computerChoiceEl.textContent = computerSelection;
+
+                const winner = determineWinner(playerSelection, computerSelection);
+                updateScore(winner);
+            });
         });
+        
+        resetBtn.addEventListener('click', resetGame);
     </script>
 </body>
 </html>
