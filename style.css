@@ -1,14 +1,12 @@
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+/* Sayfa varsayılan ayarları */
+body, html {
     margin: 0;
-    color: #333;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Sayfada kaydırma çubuğunu gizler */
 }
 
-/* Video arka planı için yeni stiller */
+/* Video arka planını tüm ekranı kaplayacak şekilde ayarlar */
 .video-arkaplan {
     position: fixed;
     top: 0;
@@ -16,74 +14,19 @@ body {
     bottom: 0;
     left: 0;
     overflow: hidden;
-    z-index: -1; /* İçeriğin arkasında kalmasını sağlar */
+    z-index: -1; /* Sayfadaki diğer içeriğin arkasında kalmasını sağlar */
 }
 
+/* Videonun kendisini en-boy oranını koruyarak tüm alanı dolduracak şekilde ayarlar */
 #arkaplan-videom {
     min-width: 100%;
     min-height: 100%;
     object-fit: cover;
 }
 
-.container {
-    background: rgba(255, 255, 255, 0.9); /* Arka planı yarı saydam hale getirir */
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 400px;
-    z-index: 1; /* İçeriğin video üzerinde kalmasını sağlar */
-    position: relative; /* z-index'in çalışması için gerekli */
-}
-
-h1 {
-    text-align: center;
-    color: #1a1a1a;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    margin-top: 10px;
-    color: #555;
-}
-
-input, textarea, button {
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button {
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    margin-top: 20px;
-    border: none;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-#status-message {
-    margin-top: 15px;
-    text-align: center;
-    font-weight: bold;
-    color: #28a745;
-}
-
-/* Mobil cihazlarda videoyu gizlemek için medya sorgusu */
+/* Mobil cihazlarda performansı artırmak için videoyu gizler */
 @media (max-width: 768px) {
     .video-arkaplan {
         display: none;
-    }
-    body {
-        background-color: #f4f4f4; /* Video olmayan arka plan rengi */
     }
 }
