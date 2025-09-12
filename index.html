@@ -66,30 +66,26 @@
     
     <button id="ses-butonu">Sesi Aç</button>
 
+    <script src="https://player.vimeo.com/api/player.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const iframe = document.getElementById('vimeo-player');
             const button = document.getElementById('ses-butonu');
-            let isMuted = true;
             
-            // Vimeo Player API'sini kullanmak için
+            // Vimeo Player API'sini kullanarak player nesnesi oluşturur
             const player = new Vimeo.Player(iframe);
 
             button.addEventListener('click', function() {
-                if (isMuted) {
-                    player.setVolume(1); // Sesi açar
-                    button.textContent = "Sesi Kapat";
-                } else {
-                    player.setVolume(0); // Sesi kapatır
-                    button.textContent = "Sesi Aç";
-                }
-                isMuted = !isMuted;
+                player.getVolume().then(function(volume) {
+                    if (volume === 0) {
+                        player.setVolume(1); // Sesi açar
+                        button.textContent = "Sesi Kapat";
+                    } else {
+                        player.setVolume(0); // Sesi kapatır
+                        button.textContent = "Sesi Aç";
+                    }
+                });
             });
-            
-            // Vimeo Player API'sinin yüklenmesi için gerekli
-            const script = document.createElement('script');
-            script.src = 'https://player.vimeo.com/api/player.js';
-            document.body.appendChild(script);
         });
     </script>
 </body>
