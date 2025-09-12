@@ -4,9 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arkadaş Şakası</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* CSS Kodları */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .video-arkaplan {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        #arkaplan-videom {
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            text-align: left;
+        }
+
+        input, textarea, button {
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #status-message {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        
+        /* Mobil cihazlar için videoyu gizle */
+        @media (max-width: 768px) {
+            .video-arkaplan {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
+
+    <div class="video-arkaplan">
+        <video autoplay loop id="arkaplan-videom">
+            <source src="videonuz.mp4" type="video/mp4">
+            Tarayıcınız video etiketini desteklemiyor.
+        </video>
+    </div>
 
     <div class="container">
         <h1>Mail Şakası</h1>
@@ -25,7 +120,6 @@
 
             <button type="submit">Gönder</button>
         </form>
-
         <p id="status-message"></p>
     </div>
 
