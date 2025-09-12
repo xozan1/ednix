@@ -3,46 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arka Plan Videosu</title>
+    <title>Video Arka Planı</title>
+    
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden; /* Sayfada kaydırma çubuğunu gizler */
-            background: #000; /* Video yüklenene kadar veya mobil için arka plan rengi */
+            overflow: hidden;
+            background-color: #000;
         }
 
         .video-arkaplan {
             position: fixed;
             top: 0;
-            right: 0;
-            bottom: 0;
             left: 0;
-            overflow: hidden;
-            z-index: -1; /* Diğer içeriğin arkasında kalmasını sağlar */
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
-        #arkaplan-videom {
-            min-width: 100%;
-            min-height: 100%;
-            object-fit: cover; /* Videonun en-boy oranını koruyarak tüm ekranı kaplamasını sağlar */
+        .video-arkaplan iframe {
+            width: 100vw;
+            height: 56.25vw;
+            min-height: 100vh;
+            min-width: 177.77vh;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
 <body>
 
     <div class="video-arkaplan">
-        <video autoplay muted loop id="arkaplan-videom">
-            <source src="https://vimeo.com/1118168493" type="video/mp4">
-            Tarayıcınız video etiketini desteklemiyor.
-        </video>
+        <iframe 
+            src="https://player.vimeo.com/video/1118168493?autoplay=1&loop=1&autopause=0&muted=1" 
+            frameborder="0" 
+            allow="autoplay; fullscreen; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
     </div>
 
 </body>
 </html>
-
-
-
-
-
