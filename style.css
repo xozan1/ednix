@@ -1,24 +1,44 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
+    color: #333;
+}
+
+/* Video arka planı için yeni stiller */
+.video-arkaplan {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -1; /* İçeriğin arkasında kalmasını sağlar */
+}
+
+#arkaplan-videom {
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
 }
 
 .container {
-    background: white;
+    background: rgba(255, 255, 255, 0.9); /* Arka planı yarı saydam hale getirir */
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 90%;
+    max-width: 400px;
+    z-index: 1; /* İçeriğin video üzerinde kalmasını sağlar */
+    position: relative; /* z-index'in çalışması için gerekli */
 }
 
 h1 {
     text-align: center;
-    color: #333;
+    color: #1a1a1a;
 }
 
 form {
@@ -43,6 +63,8 @@ button {
     color: white;
     cursor: pointer;
     margin-top: 20px;
+    border: none;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
@@ -52,5 +74,16 @@ button:hover {
 #status-message {
     margin-top: 15px;
     text-align: center;
+    font-weight: bold;
     color: #28a745;
+}
+
+/* Mobil cihazlarda videoyu gizlemek için medya sorgusu */
+@media (max-width: 768px) {
+    .video-arkaplan {
+        display: none;
+    }
+    body {
+        background-color: #f4f4f4; /* Video olmayan arka plan rengi */
+    }
 }
